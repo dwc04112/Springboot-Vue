@@ -5,8 +5,12 @@ import kr.ac.daegu.springbootapi.board.service.BoardService;
 import kr.ac.daegu.springbootapi.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,6 +20,36 @@ import java.util.List;
 public class BoardController {
 
     public final BoardService boardService;
+
+    @GetMapping(value = "/example")
+    public List<BoardDTO> SomeAction(@RequestParam("tEst")String test) {
+        log.info("board test = " + test);
+        int test1 = Integer.parseInt(test);
+        List<BoardDTO> list = boardService.getBoardByIdList(test1);
+        return list;
+    }
+    @GetMapping(value = "/list")
+    public List<BoardDTO> SelectList(){
+        return boardService.getBoardList();
+    }
+
+    @RequestMapping(value = "/list2", method = RequestMethod.GET)
+    public void listAll(Model model) throws Exception{
+        List<BoardDTO> boardVOS = boardService.getBoardList();
+        JSONObject listObj = new JSONObject();
+        JSONArray list = new JSONArray();
+        JSONObject vo = new JSONObject();
+        vo.put("boardid",boardVOS.get(1).getId());
+        vo.put("boardTitle",boardVOS.get(1).getSubject());
+        vo.put("boardWriter",boardVOS.get(1).getAuthor());
+
+        list.add(1,vo);
+
+        listObj.put("BoardVO",list);
+
+        model.addAttribute("list",listObj);
+    }
+
 
     @GetMapping(value = "/")
     public ApiResponse<BoardDTO> getBoardList(){
@@ -42,26 +76,6 @@ public class BoardController {
     @GetMapping(value = "/{id}")
     public ApiResponse<BoardDTO> getBoardById(@PathVariable int id) throws Exception {
         return boardService.getBoardById(id);
-    }
-    @GetMapping(value = "/example")
-    public ApiResponse<BoardDTO> SomeAction(@RequestParam("tEst")String test) {
-        log.info("board test = " + test);
-        // String res = "";
-        if (test.equals("1")) {
-        //    res = "one";
-            int test1 = Integer.parseInt(test);
-            return boardService.getBoardById(test1);
-        } else if (test.equals("2")) {
-        //    res = "two";
-            int test1 = Integer.parseInt(test);
-            return boardService.getBoardById(test1);
-        } else {
-        //    res = "nothing";
-            int test1 = Integer.parseInt(test);
-            return boardService.getBoardById(test1);
-        }
-        //return res;
-
     }
     
     // 글 삭제

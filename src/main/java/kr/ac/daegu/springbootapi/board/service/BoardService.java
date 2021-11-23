@@ -25,6 +25,9 @@ public class BoardService {
         return boardDAO.getBoardList();
     }
 
+    public List<BoardDTO> getBoardByIdList(int boardId){
+        return boardDAO.getBoardByIdList(boardId);
+    }
 
 
     public BoardDTO postBoard(BoardDTO boardDTO) throws Exception {

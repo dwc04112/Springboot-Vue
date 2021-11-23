@@ -27,6 +27,11 @@
         WHERE id = #{id}
     </select>
 
+    <select id="getBoardByIdList" parameterType="int" resultType="kr.ac.daegu.springbootapi.board.model.BoardDTO">
+        SELECT * from Board
+        WHERE id = #{id}
+    </select>
+
     <update id="updateIsDelBoardById" parameterType="int">
         UPDATE BOARD
         SET isDEL = 'Y'

@@ -17,4 +17,5 @@ public interface BoardDAO {
     int updateIsDelBoardById(int id);
 
 
+    List<BoardDTO> getBoardByIdList(int boardId);
 }
