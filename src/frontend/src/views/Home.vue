@@ -1,4 +1,5 @@
 <template>
+  <!--
   <v-container fluid >
     <v-card style="width: 30%">
       <v-text-field v-model="b1" label="1 or 2"></v-text-field>
@@ -6,36 +7,57 @@
       <p>{{a}}</p>
       <p></p>
     </v-card>
-
-    <v-card style="width: 30%">
-      <v-text-field label="list content"></v-text-field>
-      <h3 v-for="user in users" :key="user.id">{{user.content}}</h3>
-    </v-card>
-
-
-    <v-layout>
+        <v-layout>
       <v-flex sm2>
         <v-card color="#3333">
-          <p>제목</p>
-          <p>{{subject}}</p>
+          <p v-for="user in users" :key="user.id">{{user.id}}</p>
         </v-card>
       </v-flex>
       <v-flex sm4>
         <v-card>
-          <p>내용</p>
-          <p>{{subject}}</p>
+          <p v-for="user in users" :key="user.id">{{user.subject}}</p>
         </v-card>
       </v-flex>
       <v-flex sm2>
         <v-card>
-          <p>작성자</p>
-          <p>{{subject}}</p>
+          <p v-for="user in users" :key="user.id">{{user.author}}</p>
+        </v-card>
+      </v-flex>
+      <v-flex sm2>
+        <v-card>
+          <p v-for="user in users" :key="user.id">{{user.writeDate}}</p>
+        </v-card>
+      </v-flex>
+      <v-flex sm2>
+        <v-card>
+          <p v-for="user in users" :key="user.id">{{user.readCount}}</p>
         </v-card>
       </v-flex>
     </v-layout>
+   </v-container>
+    -->
 
-
-  </v-container>
+<v-container grid-list-md>
+  <v-text-field v-model="search" label="검색창" single-line></v-text-field>
+  <v-layout row wrap>
+    <v-flex xs12>
+      <v-data-table
+          :headers="headers"
+          :items="users"
+          :loading="loading"
+          :items-per-page="5"
+          :search="search">
+        <template slot="items" slot-scope="props">
+          <td :class="headers[0].class">{{props.item.id}}</td>
+          <td :class="headers[1].class">{{ props.item.subject }}</td>
+          <td :class="headers[2].class">{{ props.item.author }}</td>
+          <td :class="headers[3].class">{{ props.item.writeDate }}</td>
+          <td :class="headers[4].class">{{ props.item.readCount }}</td>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -45,10 +67,18 @@ export default {
   data: () => ({
     b1: '',
     users:[],
-    a: [],
+    a: '',
     subject: 'hi',
+    loading: false,
+    search: '',
+    headers: [
+      { text: '번호', value: 'id', sortable: true},
+      { text: '제목', value: 'subject', sortable: true  },
+      { text: '글쓴이', value: 'author', sortable: false },
+      { text: '등록일', value: 'writeDate', sortable: true ,filterable:false},
+      { text: '조회', value: 'readCount', sortable: true ,filterable:false}
+    ],
   }),
-
 
   methods: {
     button () {
@@ -66,12 +96,17 @@ export default {
           .catch(e=>{
             console.log(e);
           })
-    }
+    },
   },
   mounted(){
     this.retrieveUsers();
   }
 
-
 }
 </script>
+
+<style>
+.tbList th{border-top:1px solid #888;}
+.tbList th, .tbList td{border-bottom:1px solid #eee; padding:5px 0;}
+.tbList td.txt_left{text-align:left;}
+</style>
