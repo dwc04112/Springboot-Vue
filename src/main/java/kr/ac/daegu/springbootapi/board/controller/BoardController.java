@@ -11,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,9 +30,15 @@ public class BoardController {
         List<BoardDTO> list = boardService.getBoardByIdList(test1);
         return list;
     }
+
     @GetMapping(value = "/list")
     public List<BoardDTO> SelectList(){
         return boardService.getBoardList();
+    }
+
+    @GetMapping(value = "/{id}")
+    public List<BoardDTO> SelectListid(@PathVariable int id){
+        return boardService.getBoardByIdList(id);
     }
 
     @RequestMapping(value = "/list2", method = RequestMethod.GET)
@@ -67,16 +75,18 @@ public class BoardController {
     public ApiResponse<?> putBoard(@PathVariable int id,
                            @RequestBody BoardDTO boardDTO) throws Exception {
         log.debug("id: " + id);
+
         return boardService.putBoard(id, boardDTO);
     }
 
     /* mission */
     // 글 읽기
     // 요청URL은 GET http://localhost:8080/board/{id}
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "bak/{id}")
     public ApiResponse<BoardDTO> getBoardById(@PathVariable int id) throws Exception {
-        return boardService.getBoardById(id);
+         return boardService.getBoardById(id);
     }
+
     
     // 글 삭제
     // isDeleted : Y로 업데이트 시킴.
